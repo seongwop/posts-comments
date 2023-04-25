@@ -1,0 +1,47 @@
+package com.example.postscomments.entity;
+
+import com.example.postscomments.dto.CommentDto;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+
+@Entity(name = "comments")
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class Comment extends TimeStamped{
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "COMMENT_ID")
+    private Long id;
+
+    @Column(nullable = false)
+    private String content;
+
+    @JoinColumn(name = "POST_ID", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Post post;
+
+    @JoinColumn(name = "USER_ID", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
+
+    private Comment(CommentDto.Request.Create requestDto) {
+        this.content = requestDto.getContent();
+    }
+
+    public void setUserAndPost(User user, Post post) {
+        this.user = user;
+        this.post = post;
+    }
+
+    public static Comment from(CommentDto.Request.Create requestDto) {
+        return new Comment(requestDto);
+    }
+
+    public void update(CommentDto.Request.Update requestDto) {
+        this.content = requestDto.getContent();
+    }
+}

@@ -12,7 +12,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ResponseEntityDto> exceptionHandler(Exception e) {
         String msg = e.getMessage();
-        ResponseEntityDto responseEntityDto = ResponseEntityDto.exceptionStatus(msg);
-        return new ResponseEntity<>(responseEntityDto, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(ResponseEntityDto.exceptionStatus(msg), HttpStatus.BAD_REQUEST);
     }
 }

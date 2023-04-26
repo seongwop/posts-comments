@@ -32,9 +32,9 @@ public class Comment extends TimeStamped{
         this.content = requestDto.getContent();
     }
 
-    public void setUserAndPost(User user, Post post) {
-        this.user = user;
+    public void setPostAndUser(Post post, User user) {
         this.post = post;
+        this.user = user;
     }
 
     public static Comment from(CommentDto.Request.Create requestDto) {

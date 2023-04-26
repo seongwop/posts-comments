@@ -6,7 +6,6 @@ import com.example.postscomments.entity.Comment;
 import com.example.postscomments.entity.Post;
 import com.example.postscomments.entity.User;
 import com.example.postscomments.repository.CommentRepository;
-import com.example.postscomments.repository.PostRepository;
 import com.example.postscomments.util.StatusCode;
 import com.example.postscomments.util.Validate;
 import lombok.RequiredArgsConstructor;
@@ -21,15 +20,14 @@ import javax.servlet.http.HttpServletRequest;
 public class CommentService {
 
     private final Validate validate;
-    private final CommentRepository commentRepository = validate.getCommentRepository();
-    private final PostRepository postRepository = validate.getPostRepository();
+    private final CommentRepository commentRepository;
 
     @Transactional
     public ResponseEntity<ResponseEntityDto> createComment(Long postId, CommentDto.Request.Create requestDto, HttpServletRequest request) {
         User user = validate.userFromToken(request);
         Post post = validate.postExist(postId);
         Comment comment = Comment.from(requestDto);
-        comment.setUserAndPost(user, post);
+        comment.setPostAndUser(post, user);
         post.addComment(comment);
 
         Comment savedComment = commentRepository.saveAndFlush(comment);

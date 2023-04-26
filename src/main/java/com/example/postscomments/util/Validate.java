@@ -12,11 +12,13 @@ import com.example.postscomments.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 
 @Getter
 @RequiredArgsConstructor
+@Component
 public class Validate {
 
     private final JwtUtil jwtUtil;
@@ -74,7 +76,7 @@ public class Validate {
     // 유저에게 관리자 권한이 있는 지 확인
     public User userWithAdmin(HttpServletRequest request) {
         User user = userFromToken(request);
-        if (!user.getRole().equals(UserRoleEnum.ADMIN)) {
+        if (user.getRole() != UserRoleEnum.ADMIN) {
             throw new CustomException(StatusCode.NO_AUTHORIZATION_EXCEPTION.getMessage());
         }
         return user;

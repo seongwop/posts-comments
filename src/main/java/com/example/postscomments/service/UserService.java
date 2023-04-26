@@ -20,14 +20,14 @@ import javax.servlet.http.HttpServletResponse;
 public class UserService {
 
     private final Validate validate;
-    private final UserRepository userRepository = validate.getUserRepository();
-    private final JwtUtil jwtUtil = validate.getJwtUtil();
+    private final JwtUtil jwtUtil;
+    private final UserRepository userRepository;
 
     @Transactional
-    public ResponseEntity<ResponseEntityDto> signUp(UserDto.Request.signup requestDto) {
+    public ResponseEntity<ResponseEntityDto> signUp(UserDto.Request.signup requestDto, boolean admin) {
         validate.userExist(requestDto);
         UserRoleEnum role = UserRoleEnum.USER;
-        if (requestDto.isAdmin()) { role = UserRoleEnum.ADMIN; }
+        if (admin) { role = UserRoleEnum.ADMIN; }
         User user = User.builder()
                 .username(requestDto.getUsername())
                 .password(requestDto.getPassword())

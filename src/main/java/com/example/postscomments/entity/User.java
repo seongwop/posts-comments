@@ -1,6 +1,5 @@
 package com.example.postscomments.entity;
 
-import com.example.postscomments.dto.UserDto;
 import com.example.postscomments.util.UserRoleEnum;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -28,12 +27,6 @@ public class User {
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
-
-//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-//    private List<Post> postList;
-//
-//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-//    private List<Comment> commentList;
 
     @Builder
     private User(String username, String password, UserRoleEnum role) {

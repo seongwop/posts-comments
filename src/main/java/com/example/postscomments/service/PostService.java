@@ -20,7 +20,7 @@ import java.util.List;
 public class PostService {
 
     private final Validate validate;
-    private final PostRepository postRepository = validate.getPostRepository();
+    private final PostRepository postRepository;
 
     @Transactional(readOnly = true)
     public ResponseEntity<ResponseEntityDto> getPosts() {

@@ -4,9 +4,7 @@ import com.example.postscomments.dto.PostDto;
 import com.example.postscomments.dto.ResponseEntityDto;
 import com.example.postscomments.entity.Post;
 import com.example.postscomments.entity.User;
-import com.example.postscomments.exception.CustomException;
 import com.example.postscomments.repository.PostRepository;
-import com.example.postscomments.repository.UserRepository;
 import com.example.postscomments.util.StatusCode;
 import com.example.postscomments.util.Validate;
 import lombok.RequiredArgsConstructor;
@@ -21,9 +19,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostService {
 
-    private final PostRepository postRepository;
-    private final UserRepository userRepository;
     private final Validate validate;
+    private final PostRepository postRepository = validate.getPostRepository();
 
     @Transactional(readOnly = true)
     public ResponseEntity<ResponseEntityDto> getPosts() {
@@ -37,7 +34,7 @@ public class PostService {
 
     @Transactional
     public ResponseEntity<ResponseEntityDto> createPost(PostDto.Request.Create requestDto, HttpServletRequest request) {
-        User user = validate.user(request);
+        User user = validate.userFromToken(request);
         Post post = Post.from(requestDto);
         post.setUser(user);
 
@@ -48,16 +45,16 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public ResponseEntity<ResponseEntityDto> getPost(Long id) {
-        Post post = postRepository.findById(id).orElseThrow(
-                () -> new CustomException(StatusCode.NO_POST_EXCEPTION.getMessage())
-        );
+        Post post = validate.postExist(id);
+
         return new ResponseEntity<>(ResponseEntityDto.of(StatusCode.CHECK_POST_SUCCESS, StatusCode.CHECK_POST_SUCCESS.getMessage(), PostDto.Response.from(post)), StatusCode.CHECK_POST_SUCCESS.getHttpStatus());
     }
 
     @Transactional
     public ResponseEntity<ResponseEntityDto> updatePost(Long id, PostDto.Request.Update requestDto, HttpServletRequest request) {
+        User user = validate.userAdmin(request);
+        Post post = validate.postWithUser(id, user);
 
-        Post post = validate.postWithAdmin(id, request);
         post.update(requestDto);
 
         return new ResponseEntity<>(ResponseEntityDto.of(StatusCode.POST_UPDATE_SUCCESS, StatusCode.POST_UPDATE_SUCCESS.getMessage(), PostDto.Response.from(post)), StatusCode.POST_UPDATE_SUCCESS.getHttpStatus());
@@ -65,8 +62,9 @@ public class PostService {
 
     @Transactional
     public ResponseEntity<ResponseEntityDto> deletePost(Long id, HttpServletRequest request) {
+        User user = validate.userAdmin(request);
+        Post post = validate.postWithUser(id, user);
 
-        Post post = validate.postWithAdmin(id, request);
         postRepository.delete(post);
 
         return new ResponseEntity<>(ResponseEntityDto.of(StatusCode.POST_DELETE_SUCCESS, StatusCode.POST_DELETE_SUCCESS.getMessage(), PostDto.Response.from(post)), StatusCode.POST_DELETE_SUCCESS.getHttpStatus());

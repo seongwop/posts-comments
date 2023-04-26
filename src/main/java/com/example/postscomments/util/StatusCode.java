@@ -24,6 +24,7 @@ public enum StatusCode {
 
     // -----------------------------------------------------------
 
+    TOKEN_VALIDATION_EXCEPTION("토큰이 유효하지 않습니다.", HttpStatus.BAD_REQUEST),
     SAME_ID_EXIST_EXCEPTION("중복된 사용자가 존재합니다.", HttpStatus.BAD_REQUEST),
     INCORRECT_PASSWORD_EXCEPTION("비밀번호가 일치하지 않습니다.", HttpStatus.BAD_REQUEST),
     NO_SUCH_USER_EXCEPTION("등록된 사용자가 없습니다.", HttpStatus.BAD_REQUEST),

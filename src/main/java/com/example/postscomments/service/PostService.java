@@ -52,7 +52,7 @@ public class PostService {
 
     @Transactional
     public ResponseEntity<ResponseEntityDto> updatePost(Long id, PostDto.Request.Update requestDto, HttpServletRequest request) {
-        User user = validate.userAdmin(request);
+        User user = validate.userWithAdmin(request);
         Post post = validate.postWithUser(id, user);
 
         post.update(requestDto);
@@ -62,7 +62,7 @@ public class PostService {
 
     @Transactional
     public ResponseEntity<ResponseEntityDto> deletePost(Long id, HttpServletRequest request) {
-        User user = validate.userAdmin(request);
+        User user = validate.userWithAdmin(request);
         Post post = validate.postWithUser(id, user);
 
         postRepository.delete(post);

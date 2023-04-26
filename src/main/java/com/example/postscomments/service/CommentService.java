@@ -32,14 +32,14 @@ public class CommentService {
         comment.setUserAndPost(user, post);
         post.addComment(comment);
 
-        commentRepository.saveAndFlush(comment);
+        Comment savedComment = commentRepository.saveAndFlush(comment);
 
-        return new ResponseEntity<>(ResponseEntityDto.of(StatusCode.COMMENT_CREATE_SUCCESS, StatusCode.COMMENT_CREATE_SUCCESS.getMessage(), CommentDto.Response.from(comment)), StatusCode.COMMENT_CREATE_SUCCESS.getHttpStatus());
+        return new ResponseEntity<>(ResponseEntityDto.of(StatusCode.COMMENT_CREATE_SUCCESS, StatusCode.COMMENT_CREATE_SUCCESS.getMessage(), CommentDto.Response.from(savedComment)), StatusCode.COMMENT_CREATE_SUCCESS.getHttpStatus());
     }
 
     @Transactional
     public ResponseEntity<ResponseEntityDto> updateComment(Long id, CommentDto.Request.Update requestDto, HttpServletRequest request) {
-        User user = validate.userFromToken(request);
+        User user = validate.userWithAdmin(request);
         Comment comment = validate.commentWithUser(id, user);
 
         comment.update(requestDto);
@@ -49,7 +49,7 @@ public class CommentService {
 
     @Transactional
     public ResponseEntity<ResponseEntityDto> deleteComment(Long id, HttpServletRequest request) {
-        User user = validate.userFromToken(request);
+        User user = validate.userWithAdmin(request);
         Comment comment = validate.commentWithUser(id, user);
 
         commentRepository.delete(comment);

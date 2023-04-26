@@ -72,7 +72,7 @@ public class Validate {
     }
 
     // 유저에게 관리자 권한이 있는 지 확인
-    public User userAdmin(HttpServletRequest request) {
+    public User userWithAdmin(HttpServletRequest request) {
         User user = userFromToken(request);
         if (!user.getRole().equals(UserRoleEnum.ADMIN)) {
             throw new CustomException(StatusCode.NO_AUTHORIZATION_EXCEPTION.getMessage());

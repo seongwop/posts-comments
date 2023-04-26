@@ -1,5 +1,6 @@
 package com.example.postscomments.dto;
 
+import com.example.postscomments.entity.User;
 import com.example.postscomments.util.UserRoleEnum;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,6 +29,22 @@ public class UserDto {
         public static class login {
             private String username;
             private String password;
+        }
+    }
+
+    @Getter
+    @NoArgsConstructor
+    public static class Response {
+        private String username;
+        private UserRoleEnum role;
+
+        private Response(User user) {
+            this.username = user.getUsername();
+            this.role = user.getRole();
+        }
+
+        public static Response from(User user) {
+            return new Response(user);
         }
     }
 }

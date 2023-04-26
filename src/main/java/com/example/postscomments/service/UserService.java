@@ -37,9 +37,9 @@ public class UserService {
                 .role(role)
                 .build();
 
-        userRepository.save(user);
+        User savedUser = userRepository.save(user);
 
-        return new ResponseEntity<>(ResponseEntityDto.of(StatusCode.SIGNUP_SUCCESS, StatusCode.SIGNUP_SUCCESS.getMessage()), StatusCode.SIGNUP_SUCCESS.getHttpStatus());
+        return new ResponseEntity<>(ResponseEntityDto.of(StatusCode.SIGNUP_SUCCESS, StatusCode.SIGNUP_SUCCESS.getMessage(), UserDto.Response.from(savedUser)), StatusCode.SIGNUP_SUCCESS.getHttpStatus());
     }
 
     @Transactional

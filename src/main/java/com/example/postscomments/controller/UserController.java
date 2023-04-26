@@ -1,6 +1,6 @@
 package com.example.postscomments.controller;
 
-import com.example.postscomments.dto.ResponseEntityDto;
+
 import com.example.postscomments.dto.UserDto;
 import com.example.postscomments.service.UserService;
 import lombok.RequiredArgsConstructor;

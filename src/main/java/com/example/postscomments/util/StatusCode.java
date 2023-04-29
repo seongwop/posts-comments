@@ -21,6 +21,8 @@ public enum StatusCode {
     COMMENT_CREATE_SUCCESS("댓글 생성 성공", HttpStatus.OK),
     COMMENT_UPDATE_SUCCESS("댓글 수정 성공", HttpStatus.OK),
     COMMENT_DELETE_SUCCESS("댓글 삭제 성공", HttpStatus.OK),
+    POST_LIKE_SUCCESS("게시글 좋아요 성공", HttpStatus.OK),
+    COMMENT_LIKE_SUCCESS("댓글 좋아요 성공", HttpStatus.OK),
 
     // -----------------------------------------------------------
 

@@ -3,7 +3,9 @@ package com.example.postscomments.service;
 import com.example.postscomments.dto.PostDto;
 import com.example.postscomments.dto.ResponseEntityDto;
 import com.example.postscomments.entity.Post;
+import com.example.postscomments.entity.PostLike;
 import com.example.postscomments.entity.User;
+import com.example.postscomments.repository.PostLikeRepository;
 import com.example.postscomments.repository.PostRepository;
 import com.example.postscomments.util.StatusCode;
 import com.example.postscomments.util.Validate;
@@ -21,6 +23,7 @@ public class PostService {
 
     private final Validate validate;
     private final PostRepository postRepository;
+    private final PostLikeRepository postLikeRepository;
 
     @Transactional(readOnly = true)
     public ResponseEntity<ResponseEntityDto> getPosts() {
@@ -68,5 +71,26 @@ public class PostService {
         postRepository.delete(post);
 
         return new ResponseEntity<>(ResponseEntityDto.of(StatusCode.POST_DELETE_SUCCESS, StatusCode.POST_DELETE_SUCCESS.getMessage(), PostDto.Response.from(post)), StatusCode.POST_DELETE_SUCCESS.getHttpStatus());
+    }
+
+    @Transactional
+    public ResponseEntity<ResponseEntityDto> pressLike(Long postId, HttpServletRequest request) {
+        User user = validate.userFromToken(request);
+        Post post = validate.postExist(postId);
+        PostLike postLike = postLikeRepository.findByPostIdAndUserId(post.getId(), user.getId());
+
+
+        if (postLike == null) {
+            postLike = postLikeRepository.saveAndFlush(PostLike.of(false, post, user));
+        }
+        if (postLike.isPressed()) {
+            postLike.setPressed(false);
+            post.updateLikes(false);
+        } else {
+            postLike.setPressed(true);
+            post.updateLikes(true);
+        }
+
+        return new ResponseEntity<>(ResponseEntityDto.of(StatusCode.POST_LIKE_SUCCESS, StatusCode.POST_LIKE_SUCCESS.getMessage()), StatusCode.POST_LIKE_SUCCESS.getHttpStatus());
     }
 }

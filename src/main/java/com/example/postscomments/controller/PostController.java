@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -32,13 +31,18 @@ public class PostController {
         return postService.getPost(id);
     }
 
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<ResponseEntityDto> updatePost(@PathVariable Long id, @RequestBody PostDto.Request.Update requestDto, HttpServletRequest request) {
         return postService.updatePost(id, requestDto, request);
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<ResponseEntityDto> deletePost(@PathVariable Long id, HttpServletRequest request) {
         return postService.deletePost(id, request);
+    }
+
+    @PutMapping("/press-like/{id}")
+    public ResponseEntity<ResponseEntityDto> pressLike(@PathVariable Long id, HttpServletRequest request) {
+        return postService.pressLike(id, request);
     }
 }

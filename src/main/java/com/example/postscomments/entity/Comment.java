@@ -28,6 +28,9 @@ public class Comment extends TimeStamped{
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
+    @Column(nullable = false)
+    private int likes;
+
     private Comment(CommentDto.Request.Create requestDto) {
         this.content = requestDto.getContent();
     }
@@ -43,5 +46,9 @@ public class Comment extends TimeStamped{
 
     public void update(CommentDto.Request.Update requestDto) {
         this.content = requestDto.getContent();
+    }
+
+    public void updateLikes(boolean update) {
+        this.likes = update ? likes + 1 : likes - 1;
     }
 }

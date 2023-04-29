@@ -2,9 +2,8 @@ package com.example.postscomments.service;
 
 import com.example.postscomments.dto.CommentDto;
 import com.example.postscomments.dto.ResponseEntityDto;
-import com.example.postscomments.entity.Comment;
-import com.example.postscomments.entity.Post;
-import com.example.postscomments.entity.User;
+import com.example.postscomments.entity.*;
+import com.example.postscomments.repository.CommentLikeRepository;
 import com.example.postscomments.repository.CommentRepository;
 import com.example.postscomments.util.StatusCode;
 import com.example.postscomments.util.Validate;
@@ -21,6 +20,7 @@ public class CommentService {
 
     private final Validate validate;
     private final CommentRepository commentRepository;
+    private final CommentLikeRepository commentLikeRepository;
 
     @Transactional
     public ResponseEntity<ResponseEntityDto> createComment(Long postId, CommentDto.Request.Create requestDto, HttpServletRequest request) {
@@ -53,6 +53,26 @@ public class CommentService {
         commentRepository.delete(comment);
 
         return new ResponseEntity<>(ResponseEntityDto.of(StatusCode.COMMENT_DELETE_SUCCESS, StatusCode.COMMENT_DELETE_SUCCESS.getMessage(), CommentDto.Response.from(comment)), StatusCode.COMMENT_DELETE_SUCCESS.getHttpStatus());
+    }
+
+    @Transactional
+    public ResponseEntity<ResponseEntityDto> pressLike(Long commentId, HttpServletRequest request) {
+        User user = validate.userFromToken(request);
+        Comment comment = validate.commentWithUser(commentId, user);
+
+        CommentLike commentLike = commentLikeRepository.findByCommentIdAndUserId(comment.getId(), user.getId());
+
+        if (commentLike == null) {
+            commentLike = commentLikeRepository.saveAndFlush(CommentLike.of(false, comment, user));
+        }
+        if (commentLike.isPressed()) {
+            commentLike.setPressed(false);
+            comment.updateLikes(false);
+        } else {
+            commentLike.setPressed(true);
+            comment.updateLikes(true);
+        }
+        return new ResponseEntity<>(ResponseEntityDto.of(StatusCode.COMMENT_LIKE_SUCCESS, StatusCode.COMMENT_LIKE_SUCCESS.getMessage()), StatusCode.COMMENT_LIKE_SUCCESS.getHttpStatus());
     }
 
 }

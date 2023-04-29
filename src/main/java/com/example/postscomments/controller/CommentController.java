@@ -16,7 +16,7 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    @PostMapping("/post{id}/create")
+    @PostMapping("/post/{id}/create")
     public ResponseEntity<ResponseEntityDto> createComment(@PathVariable Long id, @RequestBody CommentDto.Request.Create requestDto, HttpServletRequest request) {
         return commentService.createComment(id, requestDto, request);
     }
@@ -29,5 +29,10 @@ public class CommentController {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<ResponseEntityDto> deleteComment(@PathVariable Long id, HttpServletRequest request) {
         return commentService.deleteComment(id, request);
+    }
+
+    @PutMapping("/press-like/{id}")
+    public ResponseEntity<ResponseEntityDto> pressLike(@PathVariable Long id, HttpServletRequest request) {
+        return commentService.pressLike(id, request);
     }
 }

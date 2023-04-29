@@ -38,6 +38,7 @@ public class PostDto {
         private String title;
         private String content;
         private List<CommentDto.Response> comments;
+        private int likes;
 
 
         private Response(Post post) {
@@ -50,6 +51,7 @@ public class PostDto {
                     .map(CommentDto.Response::from)
                     .sorted(Comparator.comparing(CommentDto.Response::getCreatedAt).reversed())
                     .collect(Collectors.toList());
+            this.likes = post.getLikes();
         }
 
         public static Response from(Post post) {

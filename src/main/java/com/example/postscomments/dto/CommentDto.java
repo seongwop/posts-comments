@@ -30,11 +30,13 @@ public class CommentDto {
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
         private String comment;
+        private int likes;
 
         private Response(Comment comment) {
             this.createdAt = comment.getCreatedAt();
             this.modifiedAt = comment.getModifiedAt();
             this.comment = comment.getContent();
+            this.likes = comment.getLikes();
         }
 
         public static Response from(Comment comment) {

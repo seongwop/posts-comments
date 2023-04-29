@@ -36,6 +36,9 @@ public class Post extends TimeStamped {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Comment> commentList = new ArrayList<>();
 
+    @Column(nullable = false)
+    private int likes;
+
     private Post(PostDto.Request.Create requestDto) {
         this.username = requestDto.getUsername();
         this.title = requestDto.getTitle();
@@ -57,5 +60,9 @@ public class Post extends TimeStamped {
     public void update(PostDto.Request.Update requestDto) {
         this.title = requestDto.getTitle();
         this.content = requestDto.getContent();
+    }
+
+    public void updateLikes(boolean update) {
+        this.likes = update ? likes + 1 : likes - 1;
     }
 }

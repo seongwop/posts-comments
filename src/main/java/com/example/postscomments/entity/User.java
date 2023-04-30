@@ -34,8 +34,4 @@ public class User {
         this.password = password;
         this.role = role;
     }
-
-//    public static User of(String username, String password, UserRoleEnum role) {
-//        return new User(username, password, role);
-//    }
 }

@@ -1,6 +1,7 @@
 package com.example.postscomments.controller;
 
 
+import com.example.postscomments.dto.ResponseEntityDto;
 import com.example.postscomments.dto.UserDto;
 import com.example.postscomments.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -18,12 +19,14 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/signup")
-    public ResponseEntity signup(@RequestBody @Valid UserDto.Request.signup requestDto, @RequestParam("admin") boolean admin) {
+    public ResponseEntity<ResponseEntityDto> signup(@RequestBody @Valid UserDto.Request.signup requestDto,
+                                                    @RequestParam("admin") boolean admin) {
         return userService.signUp(requestDto, admin);
     }
 
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody UserDto.Request.login requestDto, HttpServletResponse response) {
+    public ResponseEntity<ResponseEntityDto> login(@RequestBody UserDto.Request.login requestDto,
+                                                   HttpServletResponse response) {
         return userService.login(requestDto, response);
     }
 }

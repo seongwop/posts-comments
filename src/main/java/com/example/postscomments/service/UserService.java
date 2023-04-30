@@ -9,6 +9,7 @@ import com.example.postscomments.util.StatusCode;
 import com.example.postscomments.util.UserRoleEnum;
 import com.example.postscomments.util.Validate;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,7 +37,7 @@ public class UserService {
 
         User savedUser = userRepository.save(user);
 
-        return new ResponseEntity<>(ResponseEntityDto.of(StatusCode.SIGNUP_SUCCESS, StatusCode.SIGNUP_SUCCESS.getMessage(), UserDto.Response.from(savedUser)), StatusCode.SIGNUP_SUCCESS.getHttpStatus());
+        return new ResponseEntity<>(ResponseEntityDto.of(StatusCode.SIGNUP_SUCCESS, StatusCode.SIGNUP_SUCCESS.getMessage(), UserDto.Response.from(savedUser)), HttpStatus.OK);
     }
 
     @Transactional
@@ -46,6 +47,6 @@ public class UserService {
 
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(user.getUsername(), user.getRole()));
 
-        return new ResponseEntity<>(ResponseEntityDto.of(StatusCode.LOGIN_SUCCESS, StatusCode.LOGIN_SUCCESS.getMessage()), StatusCode.LOGIN_SUCCESS.getHttpStatus());
+        return new ResponseEntity<>(ResponseEntityDto.of(StatusCode.LOGIN_SUCCESS, StatusCode.LOGIN_SUCCESS.getMessage()), HttpStatus.OK);
     }
 }

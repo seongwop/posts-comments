@@ -9,12 +9,9 @@ import com.example.postscomments.jwt.JwtUtil;
 import com.example.postscomments.repository.CommentRepository;
 import com.example.postscomments.repository.PostRepository;
 import com.example.postscomments.repository.UserRepository;
-import io.jsonwebtoken.Claims;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import javax.servlet.http.HttpServletRequest;
 
 @Getter
 @RequiredArgsConstructor
@@ -25,24 +22,6 @@ public class Validate {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
-
-    // 토큰으로부터 사용자 인증
-    public User userFromToken(HttpServletRequest request) {
-        String token = jwtUtil.resolveToken(request);
-
-        if (token == null) return null;
-        else {
-            Claims claims;
-            if (jwtUtil.validateToken(token)) {
-                claims = jwtUtil.getUserInfoFromToken(token);
-            } else {
-                throw new CustomException(StatusCode.TOKEN_VALIDATION_EXCEPTION.getMessage());
-            }
-            return userRepository.findByUsername(claims.getSubject()).orElseThrow(
-                    () -> new CustomException(StatusCode.NO_SUCH_USER_EXCEPTION.getMessage())
-            );
-        }
-    }
 
     // DB에 중복된 유저가 있는지 확인
     public void userExist(UserDto.Request.signup requestDto) {
@@ -73,15 +52,6 @@ public class Validate {
         );
     }
 
-    // 유저에게 관리자 권한이 있는 지 확인
-    public User userWithAdmin(HttpServletRequest request) {
-        User user = userFromToken(request);
-        if (user.getRole() != UserRoleEnum.ADMIN) {
-            throw new CustomException(StatusCode.NO_AUTHORIZATION_EXCEPTION.getMessage());
-        }
-        return user;
-    }
-
     // 사용자의 게시글 확인
     public Post postWithUser(Long id, User user) {
         return postRepository.findByIdAndUserId(id, user.getId()).orElseThrow(
@@ -95,6 +65,4 @@ public class Validate {
                 () -> new CustomException(StatusCode.NO_SUCH_COMMENT_EXCEPTION.getMessage())
         );
     }
-
-
 }

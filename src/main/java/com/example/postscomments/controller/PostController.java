@@ -2,12 +2,12 @@ package com.example.postscomments.controller;
 
 import com.example.postscomments.dto.PostDto;
 import com.example.postscomments.dto.ResponseEntityDto;
+import com.example.postscomments.security.UserDetailsImpl;
 import com.example.postscomments.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,8 +22,9 @@ public class PostController {
     }
 
     @PostMapping
-    public ResponseEntity<ResponseEntityDto> createPost(@RequestBody PostDto.Request.Create requestDto, HttpServletRequest request) {
-        return postService.createPost(requestDto, request);
+    public ResponseEntity<ResponseEntityDto> createPost(@RequestBody PostDto.Request.Create requestDto,
+                                                        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return postService.createPost(requestDto, userDetails.getUser());
     }
 
     @GetMapping("/{id}")
@@ -32,17 +33,21 @@ public class PostController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ResponseEntityDto> updatePost(@PathVariable Long id, @RequestBody PostDto.Request.Update requestDto, HttpServletRequest request) {
-        return postService.updatePost(id, requestDto, request);
+    public ResponseEntity<ResponseEntityDto> updatePost(@PathVariable Long id,
+                                                        @RequestBody PostDto.Request.Update requestDto,
+                                                        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return postService.updatePost(id, requestDto, userDetails.getUser());
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ResponseEntityDto> deletePost(@PathVariable Long id, HttpServletRequest request) {
-        return postService.deletePost(id, request);
+    public ResponseEntity<ResponseEntityDto> deletePost(@PathVariable Long id,
+                                                        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return postService.deletePost(id, userDetails.getUser());
     }
 
     @PutMapping("/press-like/{id}")
-    public ResponseEntity<ResponseEntityDto> pressLike(@PathVariable Long id, HttpServletRequest request) {
-        return postService.pressLike(id, request);
+    public ResponseEntity<ResponseEntityDto> pressLike(@PathVariable Long id,
+                                                       @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return postService.pressLike(id, userDetails.getUser());
     }
 }

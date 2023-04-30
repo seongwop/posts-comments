@@ -45,6 +45,7 @@ public class PostService {
     @Transactional
     public ResponseEntity<ResponseEntityDto> createPost(PostDto.Request.Create requestDto,
                                                         User user) {
+
         Post post = Post.from(requestDto);
         post.setUser(user);
 

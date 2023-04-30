@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 public class ResponseEntityDto<T> {
     private int statusCode;
     private String msg;
+
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private T data;
 

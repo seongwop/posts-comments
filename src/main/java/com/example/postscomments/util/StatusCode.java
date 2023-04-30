@@ -27,13 +27,12 @@ public enum StatusCode {
     // -----------------------------------------------------------
 
     TOKEN_VALIDATION_EXCEPTION("토큰이 유효하지 않습니다.", HttpStatus.BAD_REQUEST.value()),
-    SAME_ID_EXIST_EXCEPTION("중복된 사용자가 존재합니다.", HttpStatus.BAD_REQUEST.value()),
-    INCORRECT_PASSWORD_EXCEPTION("비밀번호가 일치하지 않습니다.", HttpStatus.BAD_REQUEST.value()),
-    NO_SUCH_USER_EXCEPTION("등록된 사용자가 없습니다.", HttpStatus.BAD_REQUEST.value()),
+    SAME_ID_EXIST_EXCEPTION("중복된 username 입니다.", HttpStatus.BAD_REQUEST.value()),
+    INCORRECT_PASSWORD_EXCEPTION("회원을 찾을 수 없습니다.", HttpStatus.BAD_REQUEST.value()),
+    NO_SUCH_USER_EXCEPTION("회원을 찾을 수 없습니다.", HttpStatus.BAD_REQUEST.value()),
     NO_POST_EXCEPTION("게시글이 존재하지 않습니다", HttpStatus.BAD_REQUEST.value()),
-    NO_SUCH_POST_EXCEPTION("해당 사용자의 게시글이 존재하지 않습니다.", HttpStatus.BAD_REQUEST.value()),
-    NO_SUCH_COMMENT_EXCEPTION("해당 사용자의 댓글이 존재하지 않습니다.", HttpStatus.BAD_REQUEST.value()),
-    NO_AUTHORIZATION_EXCEPTION("권한이 없습니다.", HttpStatus.BAD_REQUEST.value());
+    NO_SUCH_POST_EXCEPTION("작성자만 삭제/수정할 수 있습니다.", HttpStatus.BAD_REQUEST.value()),
+    NO_SUCH_COMMENT_EXCEPTION("작성자만 삭제/수정할 수 있습니다.", HttpStatus.BAD_REQUEST.value());
 
     final String message;
     final int httpStatus;

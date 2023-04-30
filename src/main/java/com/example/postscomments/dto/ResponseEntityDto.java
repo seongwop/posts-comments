@@ -1,25 +1,26 @@
 package com.example.postscomments.dto;
 
 import com.example.postscomments.util.StatusCode;
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
 public class ResponseEntityDto<T> {
-    private StatusCode statusCode;
+    private int statusCode;
     private String msg;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private T data;
 
     public ResponseEntityDto(StatusCode statusCode, String msg, T data) {
-        this.statusCode = statusCode;
+        this.statusCode = statusCode.getHttpStatus();
         this.msg = msg;
         this.data = data;
     }
 
     public ResponseEntityDto(StatusCode statusCode, String msg) {
-        this.statusCode = statusCode;
+        this.statusCode = statusCode.getHttpStatus();
         this.msg = msg;
     }
 

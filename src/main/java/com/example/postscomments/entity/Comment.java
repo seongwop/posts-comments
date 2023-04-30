@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity(name = "comments")
 @Getter
@@ -30,6 +31,10 @@ public class Comment extends TimeStamped{
 
     @Column(nullable = false)
     private int likes;
+
+    @Column(nullable = false)
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.REMOVE)
+    private List<Reply> replyList;
 
     private Comment(CommentDto.Request.Create requestDto) {
         this.content = requestDto.getContent();

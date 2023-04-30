@@ -37,7 +37,7 @@ public class PostDto {
         private String username;
         private String title;
         private String content;
-        private List<CommentDto.Response> comments;
+        private List<CommentDto.Response> commentList;
         private int likes;
 
 
@@ -47,7 +47,7 @@ public class PostDto {
             this.username = post.getUsername();
             this.title = post.getTitle();
             this.content = post.getContent();
-            this.comments = post.getCommentList().stream()
+            this.commentList = post.getCommentList().stream()
                     .map(CommentDto.Response::from)
                     .sorted(Comparator.comparing(CommentDto.Response::getCreatedAt).reversed())
                     .collect(Collectors.toList());

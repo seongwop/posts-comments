@@ -24,6 +24,7 @@ public class Validate {
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
 
+    // 토큰이 필요한 API 요청에서 토큰을 전달하지 않았거나 정상 토큰이 아닐 경우
     public User userFromToken(UserDetailsImpl userDetails) {
         if (userDetails == null) {
             throw new CustomException(StatusCode.TOKEN_VALIDATION_EXCEPTION.getMessage());
@@ -31,7 +32,7 @@ public class Validate {
         return userDetails.getUser();
     }
 
-    // DB에 중복된 유저가 있는지 확인
+    // DB에 이미 존재하는 username으로 회원가입을 요청한 경우
     public void userExist(UserDto.Request.signup requestDto) {
         userRepository.findByUsername(requestDto.getUsername()).ifPresent(
                 (i) -> { throw new CustomException(StatusCode.SAME_ID_EXIST_EXCEPTION.getMessage());
@@ -39,14 +40,14 @@ public class Validate {
         );
     }
 
-    // DB에 유저가 존재하는지 확인
+    // 로그인 시, 전달된 username이 맞지 않는 경우
     public User username(UserDto.Request.login requestDto) {
         return userRepository.findByUsername(requestDto.getUsername()).orElseThrow(
                 () -> new CustomException(StatusCode.NO_SUCH_USER_EXCEPTION.getMessage())
         );
     }
 
-    // DB에 저장되어 있는 유저의 비밀번호와 입력된 비밀번호가 같은지 확인
+    // 로그인 시, 전달된 password가 맞지 않는 정보
     public void password(User user, UserDto.Request.login requestDto) {
         if (!user.getPassword().equals(requestDto.getPassword())) {
             throw new CustomException(StatusCode.INCORRECT_PASSWORD_EXCEPTION.getMessage());
@@ -60,14 +61,14 @@ public class Validate {
         );
     }
 
-    // 사용자의 게시글 확인
+    // 토큰이 있고, 유효한 토큰이지만 해당 사용자가 작성한 게시글이 아닌 경우
     public Post postWithUser(Long id, User user) {
         return postRepository.findByIdAndUserId(id, user.getId()).orElseThrow(
                 () -> new CustomException(StatusCode.NO_SUCH_POST_EXCEPTION.getMessage())
         );
     }
 
-    // 사용자의 댓글 확인
+    // 토큰이 있고, 유효한 토큰이지만 해당 사용자가 작성한 댓글이 아닌 경우
     public Comment commentWithUser(Long id, User user) {
         return commentRepository.findByIdAndUserId(id, user.getId()).orElseThrow(
                 () -> new CustomException(StatusCode.NO_SUCH_COMMENT_EXCEPTION.getMessage())

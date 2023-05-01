@@ -77,11 +77,15 @@ public class PostService {
     public ResponseEntity<ResponseEntityDto> pressLike(Long id,
                                                        User user) {
         Post post = validate.postExist(id);
-        PostLike postLike = postLikeRepository.findByPostIdAndUserId(post.getId(), user.getId());
+        PostLike postLike = postLikeRepository.findByPostIdAndUserId(post.getId(), user.getId()).orElseGet(
+                () -> postLikeRepository.saveAndFlush(PostLike.of(false, post, user))
+        );
+        pressLike(post, postLike);
 
-        if (postLike == null) {
-            postLike = postLikeRepository.saveAndFlush(PostLike.of(false, post, user));
-        }
+        return new ResponseEntity<>(ResponseEntityDto.of(StatusCode.POST_LIKE_SUCCESS, StatusCode.POST_LIKE_SUCCESS.getMessage()), HttpStatus.OK);
+    }
+
+    private static void pressLike(Post post, PostLike postLike) {
         if (postLike.isPressed()) {
             postLike.setPressed(false);
             post.updateLikes(false);
@@ -89,7 +93,5 @@ public class PostService {
             postLike.setPressed(true);
             post.updateLikes(true);
         }
-
-        return new ResponseEntity<>(ResponseEntityDto.of(StatusCode.POST_LIKE_SUCCESS, StatusCode.POST_LIKE_SUCCESS.getMessage()), HttpStatus.OK);
     }
 }

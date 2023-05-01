@@ -1,9 +1,7 @@
 package com.example.postscomments.entity;
 
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
 import javax.persistence.*;
 
 @Entity

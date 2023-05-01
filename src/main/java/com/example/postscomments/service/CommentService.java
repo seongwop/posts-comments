@@ -2,10 +2,7 @@ package com.example.postscomments.service;
 
 import com.example.postscomments.dto.CommentDto;
 import com.example.postscomments.dto.ResponseEntityDto;
-import com.example.postscomments.entity.Comment;
-import com.example.postscomments.entity.CommentLike;
-import com.example.postscomments.entity.Post;
-import com.example.postscomments.entity.User;
+import com.example.postscomments.entity.*;
 import com.example.postscomments.repository.CommentLikeRepository;
 import com.example.postscomments.repository.CommentRepository;
 import com.example.postscomments.util.StatusCode;
@@ -61,11 +58,15 @@ public class CommentService {
     public ResponseEntity<ResponseEntityDto> pressLike(Long id,
                                                        User user) {
         Comment comment = validate.commentWithUser(id, user);
-        CommentLike commentLike = commentLikeRepository.findByCommentIdAndUserId(comment.getId(), user.getId());
+        CommentLike commentLike = commentLikeRepository.findByCommentIdAndUserId(comment.getId(), user.getId()).orElseGet(
+                () -> commentLikeRepository.saveAndFlush(CommentLike.of(false, comment, user))
+        );
+        pressLike(comment, commentLike);
 
-        if (commentLike == null) {
-            commentLike = commentLikeRepository.saveAndFlush(CommentLike.of(false, comment, user));
-        }
+        return new ResponseEntity<>(ResponseEntityDto.of(StatusCode.COMMENT_LIKE_SUCCESS, StatusCode.COMMENT_LIKE_SUCCESS.getMessage()), HttpStatus.OK);
+    }
+
+    private static void pressLike(Comment comment, CommentLike commentLike) {
         if (commentLike.isPressed()) {
             commentLike.setPressed(false);
             comment.updateLikes(false);
@@ -73,7 +74,7 @@ public class CommentService {
             commentLike.setPressed(true);
             comment.updateLikes(true);
         }
-        return new ResponseEntity<>(ResponseEntityDto.of(StatusCode.COMMENT_LIKE_SUCCESS, StatusCode.COMMENT_LIKE_SUCCESS.getMessage()), HttpStatus.OK);
     }
+
 
 }

@@ -43,9 +43,7 @@ public class PostService {
     }
 
     @Transactional
-    public ResponseEntity<?> createPost(PostDto.Request.Create requestDto,
-                                                        User user) {
-
+    public ResponseEntity<?> createPost(PostDto.Request.Create requestDto, User user) {
         Post post = Post.from(requestDto);
         post.setUser(user);
 
@@ -55,9 +53,7 @@ public class PostService {
     }
 
     @Transactional
-    public ResponseEntity<?> updatePost(Long id,
-                                                        PostDto.Request.Update requestDto,
-                                                        User user) {
+    public ResponseEntity<?> updatePost(Long id, PostDto.Request.Update requestDto, User user) {
         Post post = validate.postWithUser(id, user);
         post.update(requestDto);
 
@@ -65,8 +61,7 @@ public class PostService {
     }
 
     @Transactional
-    public ResponseEntity<?> deletePost(Long id,
-                                                        User user) {
+    public ResponseEntity<?> deletePost(Long id, User user) {
         Post post = validate.postWithUser(id, user);
         postRepository.delete(post);
 
@@ -74,8 +69,7 @@ public class PostService {
     }
 
     @Transactional
-    public ResponseEntity<?> pressLike(Long id,
-                                                       User user) {
+    public ResponseEntity<?> pressLike(Long id, User user) {
         Post post = validate.postExist(id);
         PostLike postLike = postLikeRepository.findByPostIdAndUserId(post.getId(), user.getId()).orElseGet(
                 () -> postLikeRepository.saveAndFlush(PostLike.of(false, post, user))

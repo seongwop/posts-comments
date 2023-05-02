@@ -24,7 +24,7 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<?> createPost(@RequestBody PostDto.Request.Create requestDto,
-                                                        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+                                        @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return postService.createPost(requestDto, validate.userFromToken(userDetails));
     }
 
@@ -35,20 +35,20 @@ public class PostController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updatePost(@PathVariable Long id,
-                                                        @RequestBody PostDto.Request.Update requestDto,
-                                                        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+                                        @RequestBody PostDto.Request.Update requestDto,
+                                        @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return postService.updatePost(id, requestDto, validate.userFromToken(userDetails));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deletePost(@PathVariable Long id,
-                                                        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+                                        @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return postService.deletePost(id, validate.userFromToken(userDetails));
     }
 
     @PutMapping("/press-like/{id}")
     public ResponseEntity<?> pressLike(@PathVariable Long id,
-                                                       @AuthenticationPrincipal UserDetailsImpl userDetails) {
+                                       @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return postService.pressLike(id, validate.userFromToken(userDetails));
     }
 }

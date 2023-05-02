@@ -22,9 +22,7 @@ public class CommentService {
     private final CommentLikeRepository commentLikeRepository;
 
     @Transactional
-    public ResponseEntity<?> createComment(Long postId,
-                                                           CommentDto.Request.Create requestDto,
-                                                           User user) {
+    public ResponseEntity<?> createComment(Long postId, CommentDto.Request.Create requestDto, User user) {
         Post post = validate.postExist(postId);
         Comment comment = Comment.from(requestDto);
         comment.setPostAndUser(post, user);
@@ -36,9 +34,7 @@ public class CommentService {
     }
 
     @Transactional
-    public ResponseEntity<?> updateComment(Long id,
-                                                           CommentDto.Request.Update requestDto,
-                                                           User user) {
+    public ResponseEntity<?> updateComment(Long id, CommentDto.Request.Update requestDto, User user) {
         Comment comment = validate.commentWithUser(id, user);
         comment.update(requestDto);
 
@@ -46,8 +42,7 @@ public class CommentService {
     }
 
     @Transactional
-    public ResponseEntity<?> deleteComment(Long id,
-                                                           User user) {
+    public ResponseEntity<?> deleteComment(Long id, User user) {
         Comment comment = validate.commentWithUser(id, user);
         commentRepository.delete(comment);
 
@@ -55,8 +50,7 @@ public class CommentService {
     }
 
     @Transactional
-    public ResponseEntity<?> pressLike(Long id,
-                                                       User user) {
+    public ResponseEntity<?> pressLike(Long id, User user) {
         Comment comment = validate.commentWithUser(id, user);
         CommentLike commentLike = commentLikeRepository.findByCommentIdAndUserId(comment.getId(), user.getId()).orElseGet(
                 () -> commentLikeRepository.saveAndFlush(CommentLike.of(false, comment, user))

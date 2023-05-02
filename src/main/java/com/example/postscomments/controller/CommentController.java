@@ -19,27 +19,27 @@ public class CommentController {
 
     @PostMapping("/post/{postId}/create")
     public ResponseEntity<?> createComment(@PathVariable Long postId,
-                                                           @RequestBody CommentDto.Request.Create requestDto,
-                                                           @AuthenticationPrincipal UserDetailsImpl userDetails) {
+                                           @RequestBody CommentDto.Request.Create requestDto,
+                                           @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return commentService.createComment(postId, requestDto, validate.userFromToken(userDetails));
     }
 
     @PutMapping ("/update/{id}")
     public ResponseEntity<?> updateComment(@PathVariable Long id,
-                                                           @RequestBody CommentDto.Request.Update requestDto,
-                                                           @AuthenticationPrincipal UserDetailsImpl userDetails) {
+                                           @RequestBody CommentDto.Request.Update requestDto,
+                                           @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return commentService.updateComment(id, requestDto, validate.userFromToken(userDetails));
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteComment(@PathVariable Long id,
-                                                           @AuthenticationPrincipal UserDetailsImpl userDetails) {
+                                           @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return commentService.deleteComment(id, validate.userFromToken(userDetails));
     }
 
     @PutMapping("/press-like/{id}")
     public ResponseEntity<?> pressLike(@PathVariable Long id,
-                                                       @AuthenticationPrincipal UserDetailsImpl userDetails) {
+                                       @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return commentService.pressLike(id, validate.userFromToken(userDetails));
     }
 }

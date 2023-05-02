@@ -19,13 +19,13 @@ public class UserController {
 
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@RequestBody @Valid UserDto.Request.signup requestDto,
-                                                    @RequestParam("admin") boolean admin) {
+                                    @RequestParam("admin") boolean admin) {
         return userService.signUp(requestDto, admin);
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserDto.Request.login requestDto,
-                                                   HttpServletResponse response) {
+                                   HttpServletResponse response) {
         return userService.login(requestDto, response);
     }
 }

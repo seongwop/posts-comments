@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 @Entity(name = "users")
 @Getter
@@ -18,10 +19,10 @@ public class User {
     @Column(name = "USER_ID")
     private Long id;
 
-    @Column(nullable = false)
+    @NotBlank
     private String username;
 
-    @Column(nullable = false)
+    @NotBlank
     private String password;
 
     @Column(nullable = false)
@@ -33,5 +34,13 @@ public class User {
         this.username = username;
         this.password = password;
         this.role = role;
+    }
+
+    public static User of(String username, String password, UserRoleEnum role) {
+        return User.builder()
+                .username(username)
+                .password(password)
+                .role(role)
+                .build();
     }
 }

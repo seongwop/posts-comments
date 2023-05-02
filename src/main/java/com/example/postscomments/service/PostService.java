@@ -10,6 +10,8 @@ import com.example.postscomments.repository.PostRepository;
 import com.example.postscomments.util.StatusCode;
 import com.example.postscomments.util.Validate;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -26,8 +28,11 @@ public class PostService {
     private final PostLikeRepository postLikeRepository;
 
     @Transactional(readOnly = true)
-    public ResponseEntity<?> getPosts() {
-        List<PostDto.Response> postDtoList = postRepository.findAllByOrderByCreatedAtDesc()
+    public ResponseEntity<?> getPosts(int page, int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+
+        List<PostDto.Response> postDtoList = postRepository.findAllByOrderByCreatedAtDesc(pageable)
                 .stream()
                 .map(PostDto.Response::from)
                 .toList();

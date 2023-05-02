@@ -18,8 +18,9 @@ public class PostController {
     private final Validate validate;
 
     @GetMapping
-    public ResponseEntity<?> getPosts() {
-        return postService.getPosts();
+    public ResponseEntity<?> getPosts(@RequestParam("page") int page,
+                                      @RequestParam("size") int size) {
+        return postService.getPosts(page - 1, size);
     }
 
     @PostMapping

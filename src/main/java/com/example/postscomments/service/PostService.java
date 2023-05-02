@@ -26,7 +26,7 @@ public class PostService {
     private final PostLikeRepository postLikeRepository;
 
     @Transactional(readOnly = true)
-    public ResponseEntity<ResponseEntityDto> getPosts() {
+    public ResponseEntity<?> getPosts() {
         List<PostDto.Response> postDtoList = postRepository.findAllByOrderByCreatedAtDesc()
                 .stream()
                 .map(PostDto.Response::from)
@@ -36,14 +36,14 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public ResponseEntity<ResponseEntityDto> getPost(Long id) {
+    public ResponseEntity<?> getPost(Long id) {
         Post post = validate.postExist(id);
 
         return new ResponseEntity<>(ResponseEntityDto.of(StatusCode.CHECK_POST_SUCCESS, StatusCode.CHECK_POST_SUCCESS.getMessage(), PostDto.Response.from(post)), HttpStatus.OK);
     }
 
     @Transactional
-    public ResponseEntity<ResponseEntityDto> createPost(PostDto.Request.Create requestDto,
+    public ResponseEntity<?> createPost(PostDto.Request.Create requestDto,
                                                         User user) {
 
         Post post = Post.from(requestDto);
@@ -55,7 +55,7 @@ public class PostService {
     }
 
     @Transactional
-    public ResponseEntity<ResponseEntityDto> updatePost(Long id,
+    public ResponseEntity<?> updatePost(Long id,
                                                         PostDto.Request.Update requestDto,
                                                         User user) {
         Post post = validate.postWithUser(id, user);
@@ -65,7 +65,7 @@ public class PostService {
     }
 
     @Transactional
-    public ResponseEntity<ResponseEntityDto> deletePost(Long id,
+    public ResponseEntity<?> deletePost(Long id,
                                                         User user) {
         Post post = validate.postWithUser(id, user);
         postRepository.delete(post);
@@ -74,7 +74,7 @@ public class PostService {
     }
 
     @Transactional
-    public ResponseEntity<ResponseEntityDto> pressLike(Long id,
+    public ResponseEntity<?> pressLike(Long id,
                                                        User user) {
         Post post = validate.postExist(id);
         PostLike postLike = postLikeRepository.findByPostIdAndUserId(post.getId(), user.getId()).orElseGet(

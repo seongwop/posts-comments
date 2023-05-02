@@ -1,7 +1,6 @@
 package com.example.postscomments.controller;
 
 import com.example.postscomments.dto.CommentDto;
-import com.example.postscomments.dto.ResponseEntityDto;
 import com.example.postscomments.security.UserDetailsImpl;
 import com.example.postscomments.service.CommentService;
 import com.example.postscomments.util.Validate;
@@ -19,27 +18,27 @@ public class CommentController {
     private final Validate validate;
 
     @PostMapping("/post/{postId}/create")
-    public ResponseEntity<ResponseEntityDto> createComment(@PathVariable Long postId,
+    public ResponseEntity<?> createComment(@PathVariable Long postId,
                                                            @RequestBody CommentDto.Request.Create requestDto,
                                                            @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return commentService.createComment(postId, requestDto, validate.userFromToken(userDetails));
     }
 
     @PutMapping ("/update/{id}")
-    public ResponseEntity<ResponseEntityDto> updateComment(@PathVariable Long id,
+    public ResponseEntity<?> updateComment(@PathVariable Long id,
                                                            @RequestBody CommentDto.Request.Update requestDto,
                                                            @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return commentService.updateComment(id, requestDto, validate.userFromToken(userDetails));
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<ResponseEntityDto> deleteComment(@PathVariable Long id,
+    public ResponseEntity<?> deleteComment(@PathVariable Long id,
                                                            @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return commentService.deleteComment(id, validate.userFromToken(userDetails));
     }
 
     @PutMapping("/press-like/{id}")
-    public ResponseEntity<ResponseEntityDto> pressLike(@PathVariable Long id,
+    public ResponseEntity<?> pressLike(@PathVariable Long id,
                                                        @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return commentService.pressLike(id, validate.userFromToken(userDetails));
     }

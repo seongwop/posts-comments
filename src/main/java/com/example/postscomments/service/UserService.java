@@ -30,7 +30,7 @@ public class UserService {
     private final RefreshTokenRepository refreshTokenRepository;
 
     @Transactional
-    public ResponseEntity<ResponseEntityDto> signUp(UserDto.Request.signup requestDto, boolean admin) {
+    public ResponseEntity<?> signUp(UserDto.Request.signup requestDto, boolean admin) {
         validate.userExist(requestDto);
         UserRoleEnum role = UserRoleEnum.USER;
         if (admin) {
@@ -44,7 +44,7 @@ public class UserService {
     }
 
     @Transactional
-    public ResponseEntity<ResponseEntityDto> login(UserDto.Request.login requestDto, HttpServletResponse response) {
+    public ResponseEntity<?> login(UserDto.Request.login requestDto, HttpServletResponse response) {
         User user = validate.username(requestDto);
         validate.password(user, requestDto);
         TokenDto tokenDto = jwtUtil.createTokenDto(user.getUsername(), user.getRole());
